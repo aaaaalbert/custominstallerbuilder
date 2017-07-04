@@ -5,14 +5,11 @@
 # dylink, the custominstallerbuilder code could do plain Python `import`'s 
 # from Repy files, and be done. Since that doesn't work currently, 
 # we build a directory containing the full runtime instead.
-#
-# We check out much more than this in config_initialize.txt by the way.
-# This stuff is required by the installer builder script to create an 
-# installer with RepyV1 and RepyV2.
-#
-# Contributors please note:
 # Be sure to revisit this workaround whenever progress is made on 
 # SeattleTestbed/portability#25 through 28!
+#
+# Note that the base installers are *not* part of this config!
+# They are handled by SeattleTestbed/installer-packaging.
 DEPENDENCIES/repy_v2/*
 DEPENDENCIES/portability/*
 DEPENDENCIES/seattlelib_v2/*
@@ -21,3 +18,4 @@ DEPENDENCIES/common/seattleclearinghouse_xmlrpc.py
 DEPENDENCIES/softwareupdater/generatekeys.py
 DEPENDENCIES/affix/*
 DEPENDENCIES/affix/components/*
+
