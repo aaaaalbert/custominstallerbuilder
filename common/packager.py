@@ -137,7 +137,7 @@ def package_installers(working_dir, build_platforms):
 
 
 
-# Internal functions to reduce redundancy in package_keys()
+# Internal function to reduce redundancy in package_keys()
 
 def write_key_file(user_name, user_key, directory, extension):
   key_filename = os.path.join(directory, user_name + extension)
@@ -146,36 +146,16 @@ def write_key_file(user_name, user_key, directory, extension):
   key_fileobj.close()
   os.chmod(key_filename, constants.FILE_PERMISSIONS)
 
-def write_key_bundle(working_dir, key_type):  
-  bundle_filename = os.path.join(working_dir, constants.KEY_BUNDLES[key_type])
-  bundle_directory = constants.TEMP_DIR_NAMES[key_type + '_keys']
-  
-  subprocess.call(['zip', '-r', '-', bundle_directory],
-    cwd=working_dir,
-    stdout=open(bundle_filename, 'wb'),
-    stderr=open(os.devnull),
-  )
-  
-  os.chmod(bundle_filename, constants.FILE_PERMISSIONS)
-  
-  return bundle_filename
-
-
-
 
 
 def package_keys(user_data):
   """
   <Purpose>
-    Uses the given user data to create two archives: one for the public
-    keys of all users of the installer, and one for the private keys of
+    Uses the given user data to create an archive that contains both the
+    public keys of all users of the installer, and the private keys of
     all users created automatically by the installer.
 
   <Arguments>
-    working_dir:
-      The directory in which the installer configuration files are held, and
-      where the key archives will be placed. Should be an absolute path.
-      
     user_data:
       A dictionary of user information, with a key for each user name.
       Each user is represented by his own dictionary, including 'public_key'
@@ -185,40 +165,36 @@ def package_keys(user_data):
     None.
 
   <Side Effects>
-    Creates the key archives in the given build directory.
+    Creates the key archive in the given build directory.
 
   <Returns>
     None.
   """
-  
+  # XXX: Remove the temp dir once we are done with it!
   working_dir = tempfile.mkdtemp()
   
-  # Create the temporary directories to hold the key files.
-  public_dir = os.path.join(working_dir, constants.TEMP_DIR_NAMES['public_keys'])
-  private_dir = os.path.join(working_dir, constants.TEMP_DIR_NAMES['private_keys'])
-    
-  for dir_name in (public_dir, private_dir):
-    if not os.path.isdir(dir_name):
-      os.makedirs(dir_name, constants.DIR_PERMISSIONS)
-      
   # Create the key files themselves.
   for name in user_data:
     # Create the public key file.
-    write_key_file(name, user_data[name]['public_key'], public_dir, '.publickey')
+    write_key_file(name, user_data[name]['public_key'], working_dir, '.publickey')
         
     # Create the private key file, if the key exists.
     if user_data[name].get('private_key', None) is not None:
-      write_key_file(name, user_data[name]['private_key'], private_dir, '.privatekey')
+      write_key_file(name, user_data[name]['private_key'], working_dir, '.privatekey')
 
   # Record the filenames we use.
   bundle_filenames = dict()
          
-  # Create the key bundles.
-  bundle_filenames['public'] = write_key_bundle(working_dir, 'public')
-  bundle_filenames['private']  = write_key_bundle(working_dir, 'private')
+  # Create the key bundle.
+  bundle_filenames['keypair'] = bundle_filename = constants.KEY_BUNDLES['keypair']
   
-  # Remove the working directories.
-  shutil.rmtree(public_dir)
-  shutil.rmtree(private_dir)
+  subprocess.call(['zip', '-r', '-'] + os.listdir(working_dir),
+    cwd=working_dir,
+    stdout=open(bundle_filename, 'wb'),
+    stderr=open(os.devnull),
+  )
   
+  os.chmod(bundle_filename, constants.FILE_PERMISSIONS)
+
   return bundle_filenames
+

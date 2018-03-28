@@ -13,22 +13,13 @@
   <p>For your reference, the Custom Installer Builder has generated ZIP archives of any cryptographic keys associated with your installer. Once your browsing session expires, you cannot access these keys again.</p>
   
   <table>
-        
-    {% if has_private_keys %}
-  	<tr id="private_keys">
-      <td><a id="download_private_keys" class="button key {% if keys_downloaded.private %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='private' %}">Download private keys</a></td><td>You must download an archive of the private keys that were generated for new users.</td>
-  	</tr>
-    {% endif %}
-  
-    <tr id="public_keys" {% if has_private_keys and not keys_downloaded.private %}class="hidden"{% endif %}>
-      <td><a id="download_public_keys" class="button key {% if keys_downloaded.public %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='public' %}">Download public keys</a></td><td>It is strongly recommended that you download an archive of the public keys of all users.</td>
-    </tr>
-  
+  	<tr id="keypair">
+      <td><a id="download_keypair" class="button key {% if keys_downloaded.keypair %}checked{% endif %}" href="{% url 'download-keys' build_id=build_id key_type='keypair' %}">Download keys</a></td><td>You must download an archive of the cryptographic keys that were generated for new users.</td>
   </table>
   
 </div>
 
-<div id="installers" class="section{% if has_private_keys and not keys_downloaded.private %} hidden{% endif %}">
+<div id="installers" class="section{% if not keys_downloaded.keypair %} hidden{% endif %}">
   <h2>Proceed to the next step</h2>
   
   <table>

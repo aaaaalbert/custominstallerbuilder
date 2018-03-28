@@ -15,16 +15,9 @@
 
 
 $(document).ready(function () {
-  $('#download_private_keys').click(function () {
+  $('#download_keypair').click(function () {
     addCheck(this);
-    
-    $('#public_keys').fadeIn(function () {
-      $('#installers').fadeIn();
-    });
-  });
-  
-  $('#download_public_keys').click(function () {
-    addCheck(this);
+    $('#installers').fadeIn();
   });
 });
 

@@ -35,16 +35,13 @@ PLATFORM_BUNDLES = {
 
 # The names for generated cryptographic key bundles.
 KEY_BUNDLES = {
-  'public': 'public_keys.zip',
-  'private': 'private_keys.zip',
+  'keypair': 'keys.zip',
 }
 
 # The names of temporary subdirectories used during the packaging process.
 TEMP_DIR_NAMES = {
   'config_root': 'seattle',
   'config': os.path.join('seattle', 'seattle_repy'),
-  'public_keys': 'public_keys',
-  'private_keys': 'private_keys',
 }
 
 # The rules which govern what constitutes a valid username.

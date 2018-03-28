@@ -427,15 +427,10 @@ def download_keys_page(request, build_id):
     url = reverse('download-installers-page', kwargs={'build_id': build_id})
     return HttpResponseRedirect(url)
       
-  for user in keys:
-    if 'private_key' in keys[user]:
-      has_private_keys = True
-      break
 
   return render(request, 'download_keys.html',
       {
         'build_id': build_id,
-        'has_private_keys': has_private_keys,
         'keys_downloaded': keys_downloaded,
         'step': 'keys',
       })
